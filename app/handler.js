@@ -1,8 +1,10 @@
 exports.handler = async (event) => {
+  console.log("Event received:", JSON.stringify(event));
   return {
     statusCode: 200,
     body: JSON.stringify({
       message: "Hello from AWS Lambda 🚀",
+      path: event.rawPath || "unknown",
     }),
   };
 };
