@@ -32,23 +32,27 @@ jobs:
       run: |
         cd app
         npm test || echo "No tests yet"
-
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
-      with:
-        terraform_version: 1.6.2
+    
+    - name: Security Scan
+      run: |
+        cd app
+        npm audit --audit-level=moderate
 
     - name: Terraform Init
       run: terraform init
       working-directory: terraform
 
     - name: Terraform Plan
-      run: terraform plan
-      working-directory: terraform
-
-    - name: Terraform Apply
-      run: terraform apply -auto-approve
+      run: terraform plan -out=tfplan
       working-directory: terraform
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve tfplan
+      working-directory: terraform
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
