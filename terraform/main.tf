@@ -8,9 +8,9 @@ terraform {
 }
 
 provider "aws" {
-  # use variables or environment variables to configure the region and credentials
-    region = var.aws_region
-    profile = var.aws_profile
+  # use environment variables for credentials in GitHub Actions
+  # and variables for region configuration
+  region = var.aws_region
 }
 # IAM role for Lambda
 # IAM role for Lambda
