@@ -14,7 +14,7 @@ provider "aws" {
 }
 # IAM role for Lambda
 resource "aws_iam_role" "lambda_role" {
-  name = "hello-world-lambda-role"
+  name = "hello-world-lambda-role-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -88,7 +88,7 @@ resource "aws_lambda_permission" "api_permission" {
 # SNS Topic for Lambda Alerts
 ######################################
 resource "aws_sns_topic" "lambda_alerts" {
-  name = "lambda-error-alerts"
+  name = "lambda-error-alerts-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
 }
 
 ######################################
