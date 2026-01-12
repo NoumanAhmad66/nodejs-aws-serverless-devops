@@ -84,3 +84,41 @@ resource "aws_lambda_permission" "api_permission" {
   principal     = "apigateway.amazonaws.com"
   source_arn    = "${aws_apigatewayv2_api.http_api.execution_arn}/*/*"
 }
+######################################
+# SNS Topic for Lambda Alerts
+######################################
+resource "aws_sns_topic" "lambda_alerts" {
+  name = "lambda-error-alerts-${formatdate("YYYY-MM-DD-hhmm", timestamp())}"
+}
+
+
+# SNS Email Subscription
+# 🔴 YAHAN APNA EMAIL DALOs
+resource "aws_sns_topic_subscription" "email_alert" {
+  topic_arn = aws_sns_topic.lambda_alerts.arn
+  protocol  = "email"
+  endpoint  = "noumansdo737@gmail.com"
+}
+
+# CloudWatch Alarm for Lambda Errors
+resource "aws_cloudwatch_metric_alarm" "lambda_error_alarm" {
+  alarm_name          = "lambda-error-alarm"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 1
+  metric_name         = "Errors"
+  namespace           = "AWS/Lambda"
+  period              = 60
+  statistic           = "Sum"
+  threshold           = 0
+
+  alarm_description = "Alarm when Lambda function errors exceed 0"
+
+  alarm_actions = [
+    aws_sns_topic.lambda_alerts.arn
+  ]
+
+  dimensions = {
+    FunctionName = aws_lambda_function.hello_lambda.function_name
+  }
+}
+
