@@ -38,6 +38,11 @@ jobs:
         cd app
         npm audit --audit-level=moderate
 
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.6.0
+
     - name: Terraform Init
       run: terraform init
       working-directory: terraform
