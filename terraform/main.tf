@@ -13,9 +13,8 @@ provider "aws" {
   region = var.aws_region
 }
 # IAM role for Lambda
-# IAM role for Lambda
 resource "aws_iam_role" "lambda_role" {
-  name = "lambda_basic_execution_role"
+  name = "hello-world-lambda-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
